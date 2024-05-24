@@ -32,6 +32,9 @@ function displayWeather(data) {
   Parent[1].textContent = city;
   Parent[3].childNodes[1].classList.remove("hidden");
   Parent[3].childNodes[1].src = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+  Parent[3].childNodes[3].innerHTML = `<span>Temprature:${temp}</span><br>
+                                        <span>Humidity:${humidity}</span><br>
+                                        <span>Wind Speed${windSpeed}</span>`;
   console.log(weatherDisplay.childNodes[0]);
   console.log(weatherDisplay.childNodes[1]);
   console.log(weatherDisplay.childNodes[2]);

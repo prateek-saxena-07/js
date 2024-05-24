@@ -23,14 +23,56 @@
 
         <div id="weather-display" >
             <h2 id="city-name" class="text-center text-xl font-bold mb-2"></h2>
-            <div class="flex justify-center mb-2">
-                <img id="weather-icon" class="w-10 h-10 mr-2 hidden" src="" alt="Weather Icon">
+            <div class="flex items-center mb-2 flex-col ">
+                <img id="weather-icon" class="w-30 h-10 mr-2 hidden" src="" alt="Weather Icon">
                 <p id="weather-description" class="text-lg"></p>
             </div>
-            <ul id="weather-data" class="list-none pl-4">
-            </ul>
+                <div class="container px-5 py-24 mx-auto" id="5-Day-Forecast">
+                <h2>5 Day Forecast</h2>
+                    <div class="flex flex-wrap -m-4 text-center justify-center">
+                        <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                            <div
+                                class="border-2 border-gray-600 px-4 py-6 rounded-lg transform transition duration-500 hover:scale-110">
+                        
+                                <h2 class="title-font font-medium text-3xl text-gray-900"></h2>
+                                <p class="leading-relaxed"></p>
+                            </div>
+                        </div>
+                        <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                            <div
+                                class="border-2 border-gray-600 px-4 py-6 rounded-lg transform transition duration-500 hover:scale-110">
+                                
+                                <h2 class="title-font font-medium text-3xl text-gray-900"></h2>
+                                <p class="leading-relaxed"></p>
+                            </div>
+                        </div>
+                        <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                            <div
+                                class="border-2 border-gray-600 px-4 py-6 rounded-lg transform transition duration-500 hover:scale-110">
+                            
+                                <h2 class="title-font font-medium text-3xl text-gray-900"></h2>
+                                <p class="leading-relaxed"></p>
+                            </div>
+                        </div>
+                        <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                            <div
+                                class="border-2 border-gray-600 px-4 py-6 rounded-lg transform transition duration-500 hover:scale-110">
+                                
+                                <h2 class="title-font font-medium text-3xl text-gray-900"></h2>
+                                <p class="leading-relaxed"></p>
+                            </div>
+                        </div>
+                        <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                            <div class="border-2 border-gray-600 px-4 py-6 rounded-lg transform transition duration-500 hover:scale-110">
+                               
+                                <h2 class="title-font font-medium text-3xl text-gray-900"></h2>
+                                <p class="leading-relaxed"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </div>
-
+            <div id="extended-forecast"></div>
         <select id="recent-cities" class=" border rounded px-2 py-1 mb-4 hidden">
         </select>
     </div>
