@@ -1,10 +1,12 @@
 const apiKey = "f36eb96f5ca179c60031979a9d6197f0";
+// const apiGeoKey = "870b2e3949e84f488b67378c0ce5ac77";
 const searchInput = document.getElementById("city-search");
 const searchButton = document.getElementById("search-btn");
 const locationButton = document.getElementById("location-btn");
 const weatherDisplay = document.getElementById("weather-display");
 const cityDropdown = document.getElementById("city-dropdown");
 const fiveDayDiv = document.getElementById("5-Day-Forecast");
+const err = document.getElementById("error");
 
 async function fetchWeather(query) {
   const url =
@@ -19,12 +21,18 @@ async function fetchWeather(query) {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error:", error);
     displayError(error.message);
+    return;
   }
 }
 
 function displayWeather(data) {
+  if (!data || !data.city) {
+    displayError("Invalid/Empty location");
+    return;
+  }
+  err.classList.add("hidden");
+  weatherDisplay.classList.remove("hidden");
   const city = data.city.name;
   const desc = data.list[0].weather[0].description;
   const temp = Math.round(data.list[0].main.temp - 273) + "°C";
@@ -33,6 +41,7 @@ function displayWeather(data) {
   const icon = data.list[0].weather[0].icon;
   // console.log("icon", icon);
   const Parent = weatherDisplay.childNodes;
+  console.log(weatherDisplay.childNodes);
   console.log(data);
   Parent[1].textContent = city;
   Parent[3].childNodes[1].classList.remove("hidden");
@@ -49,14 +58,23 @@ function displayWeather(data) {
   // console.log(weatherDisplay.childNodes[5]);
 }
 function displayError(message) {
-  weatherDisplay.innerHTML = `<p class="text-red-500 font-bold">${message}</p>`;
+  err.classList.remove("hidden");
+  err.textContent = `${message}`;
+  fiveDayDiv.classList.add("hidden");
+  weatherDisplay.classList.add("hidden");
 }
 function extended(data) {
   // console.log(fiveDayDiv.childNodes);
   // console.log(fiveDayDiv.childNodes[5].childNodes[1].childNodes);
   // console.log(fiveDayDiv.childNodes[1].childNodes[1].childNodes[1]);
   // console.log(fiveDayDiv.childNodes[1].childNodes[1].childNodes[3]);
-
+  if (!data || !data.list) {
+    // Check for valid data and list property
+    console.error("Invalid weather data");
+    return;
+  }
+  err.classList.add("hidden");
+  fiveDayDiv.classList.remove("hidden");
   for (let i = 1, j = 1; i < 6; i++, j += 2) {
     let itag1 = fiveDayDiv.childNodes[j].childNodes[1].childNodes[1];
     let htag1 = fiveDayDiv.childNodes[j].childNodes[1].childNodes[3];
@@ -81,5 +99,35 @@ searchButton.addEventListener("click", () => {
 
       extended(data);
     })
-    .catch((error) => console.error(error));
+    .catch((error) => {
+      displayError(error);
+    });
+});
+const success = async (position) => {
+  let lat = position.coords.latitude;
+  let lon = position.coords.longitude;
+  console.log(lat, lon);
+  const url1 = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+  try {
+    const response1 = await fetch(url1);
+    // console.log(response1);
+    if (!response1.ok) {
+      throw new Error("Failed to fetch current weather data");
+    }
+    var data1 = await response1.json();
+    displayWeather(data1);
+    extended(data1);
+    // console.log(data1);
+  } catch (error) {
+    displayError(error.message);
+    return;
+  }
+};
+
+const failed = (error) => {
+  displayError(error.message);
+};
+
+locationButton.addEventListener("click", () => {
+  navigator.geolocation.getCurrentPosition(success, failed);
 });

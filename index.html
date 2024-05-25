@@ -20,7 +20,7 @@
 
         <button id="location-btn" class="btn bg-gray-300 text-gray-700 px-4 py-1 rounded mb-4">Get Location
             Weather</button>
-
+                <div id="error" class="hidden"></div>
         <div id="weather-display" >
             <h2 id="city-name" class="text-center text-xl font-bold mb-2"></h2>
             <div class="flex items-center mb-2 flex-col ">
@@ -29,7 +29,7 @@
             </div>
                 <div class="container px-5 py-24 mx-auto" >
                 <h2>5 Day Forecast</h2>
-                    <div class="flex flex-wrap -m-4 text-center justify-center" id="5-Day-Forecast">
+                    <div class="flex flex-wrap -m-4 text-center justify-center hidden" id="5-Day-Forecast">
                         <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
                             <div
                                 class="border-2 border-gray-600 px-4 py-6 rounded-lg transform transition duration-500 hover:scale-110">
@@ -73,7 +73,7 @@
                     </div>
                 </div>
         </div>
-            <div id="extended-forecast"></div>
+            
         <select id="recent-cities" class=" border rounded px-2 py-1 mb-4 hidden">
         </select>
     </div>
