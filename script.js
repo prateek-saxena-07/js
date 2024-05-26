@@ -4,9 +4,13 @@ const searchInput = document.getElementById("city-search");
 const searchButton = document.getElementById("search-btn");
 const locationButton = document.getElementById("location-btn");
 const weatherDisplay = document.getElementById("weather-display");
-const cityDropdown = document.getElementById("city-dropdown");
+
+const dropdown = document.getElementById("recentCities");
+// const recentCityDropdown = document.querySelectorAll("option");
 const fiveDayDiv = document.getElementById("5-Day-Forecast");
+const heading5 = document.getElementById("5dayheading");
 const err = document.getElementById("error");
+const recentCities = [];
 
 async function fetchWeather(query) {
   const url =
@@ -31,6 +35,9 @@ function displayWeather(data) {
     displayError("Invalid/Empty location");
     return;
   }
+  addRecentCity(data.city.name);
+  saveData();
+  document.getElementById("recent-span").classList.remove("hidden");
   err.classList.add("hidden");
   weatherDisplay.classList.remove("hidden");
   const city = data.city.name;
@@ -73,8 +80,11 @@ function extended(data) {
     console.error("Invalid weather data");
     return;
   }
+  // addRecentCity(data.city.name);
+  saveData();
   err.classList.add("hidden");
   fiveDayDiv.classList.remove("hidden");
+  heading5.classList.remove("hidden");
   for (let i = 1, j = 1; i < 6; i++, j += 2) {
     let itag1 = fiveDayDiv.childNodes[j].childNodes[1].childNodes[1];
     let htag1 = fiveDayDiv.childNodes[j].childNodes[1].childNodes[3];
@@ -131,3 +141,56 @@ const failed = (error) => {
 locationButton.addEventListener("click", () => {
   navigator.geolocation.getCurrentPosition(success, failed);
 });
+
+function onRecentCityClick(event) {
+  const selectedCity = event.target.value;
+  if (selectedCity) {
+    // Handle city selection (e.g., fetch weather)
+    {
+      fetchWeather(selectedCity)
+        .then((data) => {
+          displayWeather(data);
+
+          extended(data);
+        })
+        .catch((error) => {
+          displayError(error);
+        });
+    }
+    saveData();
+  }
+}
+dropdown.addEventListener("change", onRecentCityClick);
+
+// Function to add a city to the dropdown
+function addRecentCity(city) {
+  // Check if city already exists
+
+  if (recentCities.includes(city)) return;
+
+  // Limit the number of recent cities (optional)
+  if (recentCities.length >= 5) {
+    recentCities.shift(); // Remove the oldest city
+  }
+
+  recentCities.push(city); // Add the new city
+
+  // Update the dropdown options
+  // const dropdown = document.getElementById("recentCities");
+  // Clear existing options
+
+  const option = document.createElement("option");
+  option.value = city;
+  option.textContent = city;
+
+  dropdown.appendChild(option);
+}
+
+function saveData() {
+  localStorage.setItem("d", dropdown.innerHTML);
+}
+
+function showData() {
+  dropdown.innerHTML = localStorage.getItem("d");
+}
+showData();
