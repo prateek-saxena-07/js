@@ -1,0 +1,29 @@
+.tiles
+{
+    background: grey;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    
+}
+
+.font
+{
+    font-family: poppins;
+    
+
+}
+.gradient
+{
+background: rgb(27, 30, 31);
+    background: radial-gradient(circle, rgba(27, 30, 31, 1) 0%, rgba(104, 116, 219, 1) 100%);
+}
+
+.gradient-line
+{
+    background: linear-gradient(90deg, rgba(255, 23, 228, 1) 0%, rgba(134, 251, 251, 1) 100%);
+        height: 3px;
+}
+
+#error
+{
+    color: red;
+}

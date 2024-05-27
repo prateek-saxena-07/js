@@ -11,6 +11,7 @@ const fiveDayDiv = document.getElementById("5-Day-Forecast");
 const heading5 = document.getElementById("5dayheading");
 const err = document.getElementById("error");
 const recentCities = [];
+localStorage.clear();
 
 async function fetchWeather(query) {
   const url =
@@ -81,7 +82,7 @@ function extended(data) {
     return;
   }
   // addRecentCity(data.city.name);
-  saveData();
+  // saveData();
   err.classList.add("hidden");
   fiveDayDiv.classList.remove("hidden");
   heading5.classList.remove("hidden");
@@ -157,18 +158,13 @@ function onRecentCityClick(event) {
           displayError(error);
         });
     }
-    saveData();
   }
 }
 dropdown.addEventListener("change", onRecentCityClick);
 
-// Function to add a city to the dropdown
 function addRecentCity(city) {
-  // Check if city already exists
-
   if (recentCities.includes(city)) return;
 
-  // Limit the number of recent cities (optional)
   if (recentCities.length >= 5) {
     recentCities.shift(); // Remove the oldest city
   }
