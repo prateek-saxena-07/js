@@ -1,18 +1,16 @@
 const apiKey = "f36eb96f5ca179c60031979a9d6197f0";
-// const apiGeoKey = "870b2e3949e84f488b67378c0ce5ac77";
 const searchInput = document.getElementById("city-search");
 const searchButton = document.getElementById("search-btn");
 const locationButton = document.getElementById("location-btn");
 const weatherDisplay = document.getElementById("weather-display");
-
 const dropdown = document.getElementById("recentCities");
-// const recentCityDropdown = document.querySelectorAll("option");
 const fiveDayDiv = document.getElementById("5-Day-Forecast");
 const heading5 = document.getElementById("5dayheading");
 const err = document.getElementById("error");
 const recentCities = [];
 localStorage.clear();
 
+//fetches and return data asynchronously
 async function fetchWeather(query) {
   const url =
     "https://api.openweathermap.org/data/2.5/forecast?q=" +
@@ -31,13 +29,18 @@ async function fetchWeather(query) {
   }
 }
 
+//displays current weather
 function displayWeather(data) {
   if (!data || !data.city) {
     displayError("Invalid/Empty location");
     return;
   }
   addRecentCity(data.city.name);
+  //adds recent cities to the <select> element
+
   saveData();
+  //Saves the <select> element state to local storage
+
   document.getElementById("recent-span").classList.remove("hidden");
   err.classList.add("hidden");
   weatherDisplay.classList.remove("hidden");
@@ -65,12 +68,16 @@ function displayWeather(data) {
   // console.log(weatherDisplay.childNodes[4]);
   // console.log(weatherDisplay.childNodes[5]);
 }
+
+//displays all error message
 function displayError(message) {
   err.classList.remove("hidden");
   err.textContent = `${message}`;
   fiveDayDiv.classList.add("hidden");
   weatherDisplay.classList.add("hidden");
 }
+
+// displays 5 day forecast
 function extended(data) {
   // console.log(fiveDayDiv.childNodes);
   // console.log(fiveDayDiv.childNodes[5].childNodes[1].childNodes);
@@ -81,8 +88,6 @@ function extended(data) {
     console.error("Invalid weather data");
     return;
   }
-  // addRecentCity(data.city.name);
-  // saveData();
   err.classList.add("hidden");
   fiveDayDiv.classList.remove("hidden");
   heading5.classList.remove("hidden");
@@ -101,19 +106,7 @@ function extended(data) {
   }
 }
 
-searchButton.addEventListener("click", () => {
-  const searchTerm = searchInput.value;
-
-  fetchWeather(searchTerm)
-    .then((data) => {
-      displayWeather(data);
-
-      extended(data);
-    })
-    .catch((error) => {
-      displayError(error);
-    });
-});
+//callbacks for Geolocation api ==>success fetches position and latitude and longitude to the url
 const success = async (position) => {
   let lat = position.coords.latitude;
   let lon = position.coords.longitude;
@@ -135,14 +128,12 @@ const success = async (position) => {
   }
 };
 
+// callback for geolocation api ==>failure returns a error message to display
 const failed = (error) => {
   displayError(error.message);
 };
 
-locationButton.addEventListener("click", () => {
-  navigator.geolocation.getCurrentPosition(success, failed);
-});
-
+//triggers fetching and displaying of data when recent city is selected
 function onRecentCityClick(event) {
   const selectedCity = event.target.value;
   if (selectedCity) {
@@ -160,21 +151,12 @@ function onRecentCityClick(event) {
     }
   }
 }
-dropdown.addEventListener("change", onRecentCityClick);
 
+// add recently searched city into the list and is called whenever "search" or "geolocation " is clicked
 function addRecentCity(city) {
   if (recentCities.includes(city)) return;
 
-  if (recentCities.length >= 5) {
-    recentCities.shift(); // Remove the oldest city
-  }
-
-  recentCities.push(city); // Add the new city
-
-  // Update the dropdown options
-  // const dropdown = document.getElementById("recentCities");
-  // Clear existing options
-
+  recentCities.push(city);
   const option = document.createElement("option");
   option.value = city;
   option.textContent = city;
@@ -182,10 +164,36 @@ function addRecentCity(city) {
   dropdown.appendChild(option);
 }
 
+// triggered when search button is clicked and async function fetchweather() is called for fetching data from api and data is passed to be displayed in displayWeather()
+searchButton.addEventListener("click", () => {
+  const searchTerm = searchInput.value;
+
+  fetchWeather(searchTerm)
+    .then((data) => {
+      displayWeather(data);
+      extended(data);
+    })
+    .catch((error) => {
+      displayError(error);
+    });
+});
+
+// triggered when location button is clicked then GPS coordinates are fetched from geolocation api and that data is passed to async function fetchweather() for fetching data from api and data is passed to be displayed in displayWeather()
+
+locationButton.addEventListener("click", () => {
+  //geolocation api call which take two callbacks defined above
+  navigator.geolocation.getCurrentPosition(success, failed);
+});
+
+//display data of the recent city when the recent city is selected via the same process as mentioned above
+dropdown.addEventListener("change", onRecentCityClick);
+
+//for storing recent cities
 function saveData() {
   localStorage.setItem("d", dropdown.innerHTML);
 }
 
+//for displaying recent cities
 function showData() {
   dropdown.innerHTML = localStorage.getItem("d");
 }
